@@ -29,6 +29,16 @@ select 1, 'hello', 'world', 'hello' + 'world'
 select 2-3
 ```
 
+### boolean
+```SQL
+select 1=1	--doesn't work  :(
+```
+
+### if
+```SQL
+select case when 1=1 then 'yes' else 'no' end
+```
+
 ### huh? null?
 ```SQL
 select null
@@ -45,6 +55,11 @@ from (
 	select null
 ) t(col1)
 where col1 is not null
+
+select @@rowcount --0
+
+select 1
+where 1=0
 
 select @@rowcount --0
 ```
