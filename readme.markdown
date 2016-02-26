@@ -34,7 +34,7 @@ select 2-3
 select 1=1	--doesn't work  :(
 ```
 
-### if
+### "if"
 ```SQL
 select case when 1=1 then 'yes' else 'no' end
 ```
@@ -68,9 +68,9 @@ select @@rowcount --0
 ### expressions from values -- this enumerates expressions across your rows
 ```SQL
   --first way, union (all)
-  select 1 union select 1
+  select 1 union select 1		--union removes duplicates
 
-  select 1 union all select 1
+  select 1 union all select 1	--union all keeps them
 
   --second way, table value constructor    
   select 1, col1
@@ -96,8 +96,142 @@ select @@rowcount --0
   from sys.objects
 ```
 
+
+
+
+### subqueries
+```SQL
+select		col1
+
+from	(	--subquery
+				select 1
+			) t(col1)
+-- t is the alias of the "table"
+-- we can define the column names of "t" during the alias of "t" like this:
+-- t(col1, col2)
+-- or as aliases in the column
+select		col1
+
+from	( --subquery
+				select 1 col1
+			) t
+
+
+--2 level nested subqueries
+select		col1
+
+from		(	--subquery 1
+				select	col1
+
+				from	(	--subquery 2
+							select 1 col1
+						) subq2
+
+				) subq1
+```
+
+
+
+
+### but common table expressions (CTE) are so much better
+```SQL
+;with
+s1 as (
+	select 1	col1
+	union select 2
+	union select 3
+)
+select	col1
+from	s1
+where	col1 >= 2
+--row result:
+--2
+--3
+
+;with
+s1 as (
+	select 1	col1
+	union select 2
+	union select 3
+)
+,s2 as (
+	select	col1
+	from	s1
+	where	col1 >= 2
+)
+select	col1
+from		s2
+where		col1 = 3
+```
+
+### group by
+```SQL
+;with
+s1 as (
+	select 'kevin' name, 3 stars
+	union all select 'kevin', 2
+	union all select 'kevin', null
+	union all select 'mike', 3
+	union all select 'sally', 1
+	union all select 'sally', 6
+)
+select		name
+			, count(stars) rows		
+from		s1
+group by	name
+
+--wait, what happened to my NULL?
+--group by doesn't care about them
+--so lets rewrite
+
+;with
+s1 as (
+	select 'kevin' name, 3 stars
+	union all select 'kevin', 2
+	union all select 'kevin', null
+	union all select 'mike', 3
+	union all select 'sally', 1
+	union all select 'sally', 6
+)
+select		name
+			, count(1) rows		
+from		s1
+group by	name
+
+--more aggregates
+--HAVING vs WHERE
+
+;with
+s1 as (
+	select 'kevin' name, 3 stars
+	union all select 'kevin', 2
+	union all select 'kevin', null
+	union all select 'mike', 3
+	union all select 'mike', 8
+	union all select 'sally', 1
+	union all select 'sally', 6
+)
+select		name
+			, count(1) rows		
+			, sum(stars) totalStars
+			, min(stars) minimumStar			
+			, min(case when stars is null then 0 else stars end) minimumStarWithNull
+from		s1
+where		name <> 'kevin'
+group by	name
+having		min(stars) >=3
+```
+
 ### joins
 joins on table restraints (dont put everything in the where clause)
+
+```SQL
+
+```
+
+
+
+
 
   from    table1  t1
 
@@ -105,22 +239,6 @@ joins on table restraints (dont put everything in the where clause)
                           and t2.status = 'happy'
 
   -- the join there is lowering the row count
-
-### group by
-
-
-
-### subqueries
-
-
-
-### but common table expression are so much better
-```SQL
-  ;with single as (
-    select 1
-  )
-  select * from single
-```
 
 ### windowed functions
 
@@ -130,6 +248,13 @@ before CTE and windowed functions, to get weighted rows, we did something like t
 ....but this is a hack!
 
 ... the better way.
+
+
+### putting it all together
+CTE, windowed functions
+
+
+### fun with fibonacci
 
 
 ### SQL formatting!
