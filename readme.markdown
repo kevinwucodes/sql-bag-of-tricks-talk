@@ -74,7 +74,7 @@ select @@rowcount --0
   			select 1
 	union	select 1		--union removes duplicates
 
-  					select 1
+				select 1
 	union all	select 1	--union all keeps them
 ```
 #### second way
