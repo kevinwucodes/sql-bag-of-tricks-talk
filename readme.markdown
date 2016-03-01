@@ -74,19 +74,24 @@ select @@rowcount --0
 				select 1
 	union all	select 1	--union all keeps them
 ```
-#### second way (table value constructor)
+#### table value constructor
 ```SQL
-select	col1
+select	1
+				, col1				
 from	(
-			values ('a'), ('b')
+			values
+				 ('a')
+				,('b')
 		) t(col1)
 /*
-col1
-----
-a
-b
+						col1
+----------- ----
+1           a
+1           b
 
 (2 row(s) affected)
+
+
 */  
 ```
 We just define the column names differently.
