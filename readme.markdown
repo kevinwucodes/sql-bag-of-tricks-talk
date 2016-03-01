@@ -108,10 +108,10 @@ Note that union (all) also requires you to define the column names
 ```SQL
 select		col1
 from	(	--subquery
-				select 1
-			) t(col1)
+			select 1
+		) t(col1)
 ```
-t is the alias of the "table"
+where "t" is defined as the alias of the subquery
 We can define the column names of "t" during the alias creation of "t" like this:
 t(col1, col2)
 
@@ -120,8 +120,8 @@ t(col1, col2)
 select		col1
 
 from	( --subquery
-				select 1 col1		-- or as aliases in the column
-			) t
+			select 1 col1		-- or as aliases in the column
+		) t
 ```
 #### 2 levels deep
 ```SQL
