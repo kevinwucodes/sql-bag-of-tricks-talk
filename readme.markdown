@@ -135,7 +135,7 @@ from		(	--subquery 1
 							select 1 col1
 						) subq2
 
-				) subq1
+			) subq1
 ```
 
 ### but common table expressions (CTE) are so much better
