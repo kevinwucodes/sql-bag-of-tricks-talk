@@ -87,8 +87,8 @@ from	(
 		) t(col1)  
 ```
 We just define the columns names differently.
-Note that union (all) also requires you to define the column names otherwise you get a "(no column name)".
-To have no column names is generally fine, especially if the query is the last resultset in the chain.  However, if you need to use a resultset to participate in another resultset downstream and there are no column names, SQL Server will give you an error.
+Note that union (all) also requires you to define column names otherwise you get a "(no column name)".
+To have no column names is generally fine, especially if the query is the last resultset in the chain.  However, if you need to use a resultset that have no column names that end up participating in another resultset downstream from it, SQL Server will give you an error.
 
 ### expressions from table
 ```SQL
@@ -263,7 +263,7 @@ from		stars
 There are lots of windowed functions: rank, count, sum, ntile, ...  Look them up in the SQL documentation and checkout their examples
 
 ### joins
-#### 3 join types that you'll use on a daily basis
+#### 2 join types that you'll use on a daily basis
 ##### inner join
 the resulting join will show that each record in the two joined tables is matched
 ```SQL
@@ -322,19 +322,17 @@ similar to left join, a right join is such that the resulting join will contain 
 
 *Note that a right join can be converted to a left join when you flip the order of the join*
 
-
-In the example above, this
+The join resultset from this:
 ```SQL
 from		stars	s
 left join	persons p on p.personid = s.personid
 ```
-is the same as
+is the same as this:
 ```SQL
 from		persons p
 right join	stars	s	on	s.personid = p.personid
 ```
-**so really there are only 2 join types that you'll use most of the time**
-
+So really, only 2 types you use **most** of the time.
 
 
 ### putting it all together
