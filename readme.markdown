@@ -89,8 +89,8 @@ b
 (2 row(s) affected)
 */  
 ```
-We just define the columns names differently.
-Note that union (all) also requires you to define column names otherwise you get a "(no column name)".
+We just define the column names differently.
+Note that union or union all both require you to define column names.  If not, you get a "(no column name)" as a placeholder for the name of the column.
 To have no column names is generally fine, especially if the query is the last resultset in the chain.  However, if you need to use a resultset that have no column names that end up participating in another resultset downstream from it, SQL Server will give you an error.
 
 ### expressions from table
