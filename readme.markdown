@@ -177,7 +177,7 @@ where		col1 = 3
 ```SQL
 ;with
 s1 as (
-				select 'kevin' name, 3 stars
+			select 'kevin' name, 3 stars
 	union all select 'kevin', 2
 	union all select 'kevin', null
 	union all select 'mike', 3
@@ -195,7 +195,7 @@ Wait, what happened to my NULLs?  Group by doesn't care about them so lets rewri
 ```SQL
 ;with
 s1 as (
-				select 'kevin' name, 3 stars
+			select 'kevin' name, 3 stars
 	union all select 'kevin', 2
 	union all select 'kevin', null
 	union all select 'mike', 3
@@ -203,16 +203,15 @@ s1 as (
 	union all select 'sally', 6
 )
 select		name
-			, count(1) rows								--1st way
+			, count(1) rows							--1st way
 			, count(isnull(stars,0)) rows	--another way
 from		s1
 group by	name
+```
+*You need to determine if it makes sense whether nulls should be counted or not*
 
---determine if it makes sense whether nulls should be counted or not
-
---more aggregates
---HAVING vs WHERE
-
+#### more aggregates, HAVING vs WHERE
+```SQL
 ;with
 s1 as (
 	select 'kevin' name, 3 stars
@@ -267,7 +266,7 @@ the resulting join will show that each record in the two joined tables is matche
 	union all select 2, 'Sally'
 	union all select 3, 'Mike'
 )
-, stars(starsId, personId, stars, collectedDate) as (
+,stars(starId, personId, stars, collectedDate) as (
 		  select 1, 1, 5,  cast('2016-03-01' as datetime)
 union all select 2, 1, 9,  cast('2015-01-01' as datetime)
 union all select 3, 3, 10, cast('2014-04-01' as datetime)
@@ -276,7 +275,7 @@ union all select 3, 3, 10, cast('2014-04-01' as datetime)
 select		p.personid
 			, p.name
 
-			, s.starsId
+			, s.starId
 			, s.personid
 			, s.stars
 			, s.collectedDate
