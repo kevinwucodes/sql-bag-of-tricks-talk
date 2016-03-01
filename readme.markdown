@@ -98,6 +98,7 @@ select @@rowcount --0
 
 
 ### subqueries
+#### 1 level deep
 ```SQL
 select		col1
 
