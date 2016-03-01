@@ -76,7 +76,7 @@ select @@rowcount --0
 ```
 #### table value constructor
 ```SQL
-select	1
+select	1 'one'
 				, col1				
 from	(
 			values
@@ -84,14 +84,12 @@ from	(
 				,('b')
 		) t(col1)
 /*
-						col1
+one         col1
 ----------- ----
 1           a
 1           b
 
 (2 row(s) affected)
-
-
 */  
 ```
 We just define the column names differently.
