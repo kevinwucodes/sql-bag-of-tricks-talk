@@ -146,7 +146,6 @@ col1
 ```
 #### 2 levels deep
 ```SQL
---2 level nested subqueries
 select		col1
 
 from		(	--subquery 1
@@ -303,7 +302,8 @@ The where clause happens _before_ you group by.  The having clause happens _afte
 
 ### windowed functions
 ```SQL
-;with stars(starsId, personId, stars, collectedDate) as (
+;with
+stars(starsId, personId, stars, collectedDate) as (
 			  select 1, 1, 5,  cast('2016-03-01' as datetime)
 	union all select 2, 1, 9,  cast('2015-01-01' as datetime)
 	union all select 3, 1, 2,  cast('2012-02-05' as datetime)
@@ -333,7 +333,7 @@ starsid     personid    stars       collectedDate           orderNothing        
 (5 row(s) affected)
 */
 ```
-There are lots of windowed functions: rank, count, sum, ntile, ...  Look them up in the SQL documentation and checkout their examples
+There are lots of windowed functions: ```rank```, ```count```, ```sum```, ```ntile```, ...  Look them up in the SQL documentation and check out their examples
 
 ### joins
 #### 2 join types that you'll use on a daily basis
@@ -347,8 +347,10 @@ the resulting join will show that each record in the two joined tables is matche
 )
 ,stars(starId, personId, stars, collectedDate) as (
 		  select 1, 1, 5,  cast('2016-03-01' as datetime)
-union all select 2, 1, 9,  cast('2015-01-01' as datetime)
-union all select 3, 3, 10, cast('2014-04-01' as datetime)
+	union all select 2, 1, 9,  cast('2015-01-01' as datetime)
+	union all select 3, 1, 2,  cast('2012-02-05' as datetime)
+	union all select 4, 3, 10, cast('2014-04-01' as datetime)
+	union all select 5, 3, 11, cast('2013-02-22' as datetime)
 )
 
 select		p.personid
@@ -361,21 +363,36 @@ select		p.personid
 
 from		persons	p
 inner join	stars	s	on	s.personid = p.personid
--- there is no Sally here because Sally has no stars collected
+/*
+personid    name  starId      personid    stars       collectedDate
+----------- ----- ----------- ----------- ----------- -----------------------
+1           Kevin 1           1           5           2016-03-01 00:00:00.000
+1           Kevin 2           1           9           2015-01-01 00:00:00.000
+1           Kevin 3           1           2           2012-02-05 00:00:00.000
+3           Mike  4           3           10          2014-04-01 00:00:00.000
+3           Mike  5           3           11          2013-02-22 00:00:00.000
+
+(5 row(s) affected)
+*/
 ```
+
+Notice that there is no Sally because Sally has no stars collected.
 
 ##### left join
 the resulting join will contain all records from the "left" table, even if the join condition does not find a matching record from the "right" table
 ```SQL
-;with persons(personId, name) as (
+;with
+persons(personId, name) as (
 			  select 1, 'Kevin'
 	union all select 2, 'Sally'
 	union all select 3, 'Mike'
 )
 ,stars(starsId, personId, stars, collectedDate) as (
-		  select 1, 1, 5,  cast('2016-03-01' as datetime)
+	select 1, 1, 5,  cast('2016-03-01' as datetime)
 union all select 2, 1, 9,  cast('2015-01-01' as datetime)
-union all select 3, 3, 10, cast('2014-04-01' as datetime)
+union all select 3, 1, 2,  cast('2012-02-05' as datetime)
+union all select 4, 3, 10, cast('2014-04-01' as datetime)
+union all select 5, 3, 11, cast('2013-02-22' as datetime)
 )
 
 select		p.personid
@@ -388,12 +405,26 @@ select		p.personid
 
 from		persons	p
 left join 	stars	s	on	s.personid = p.personid
--- Sally is now shown because of left join, even though she has no stars collected
-```
-##### right join
-similar to left join, a right join is such that the resulting join will contain all records from the "right" table, even if the join condition does not find a matching record from the "left" table
+/*
+personid    name  starsId     personid    stars       collectedDate
+----------- ----- ----------- ----------- ----------- -----------------------
+1           Kevin 1           1           5           2016-03-01 00:00:00.000
+1           Kevin 2           1           9           2015-01-01 00:00:00.000
+1           Kevin 3           1           2           2012-02-05 00:00:00.000
+2           Sally NULL        NULL        NULL        NULL
+3           Mike  4           3           10          2014-04-01 00:00:00.000
+3           Mike  5           3           11          2013-02-22 00:00:00.000
 
-*Note that a right join can be converted to a left join when you flip the order of the join*
+(6 row(s) affected)
+*/
+```
+
+Sally is now shown because of left join, even though she has no stars collected
+
+##### right join
+A right join is similar to left join.  A right join is such that the resulting join will contain all records from the "right" table, even if the join condition does not find a matching record from the "left" table
+
+This means that **a right join can be converted to a left join when you flip the order of the join**
 
 The join resultset from this:
 ```SQL
