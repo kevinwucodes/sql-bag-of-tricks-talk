@@ -66,12 +66,15 @@ select @@rowcount --0
 
 ### lets make some rows
 ### expressions from values -- this enumerates expressions across your rows
+#### first way
 ```SQL
   --first way, union (all)
   select 1 union select 1		--union removes duplicates
 
   select 1 union all select 1	--union all keeps them
-
+```
+#### second way
+```SQL
   --second way, table value constructor    
   select 1, col1
   from (
@@ -114,8 +117,9 @@ select		col1
 from	( --subquery
 				select 1 col1
 			) t
-
-
+```
+#### 2 levels deep
+```SQL
 --2 level nested subqueries
 select		col1
 
@@ -128,8 +132,6 @@ from		(	--subquery 1
 
 				) subq1
 ```
-
-
 
 
 ### but common table expressions (CTE) are so much better
