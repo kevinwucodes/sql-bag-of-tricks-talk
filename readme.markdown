@@ -38,7 +38,7 @@ select 1=1	--doesn't work  :(
 
 ### "if"
 ```SQL
-select case when 1=1 then 'yes' else 'no' end
+select case when 1=1 then 'yes' else 'no' end	--returns yes
 ```
 
 ### huh? null?
@@ -84,7 +84,15 @@ select @@rowcount --0
 select	col1
 from	(
 			values ('a'), ('b')
-		) t(col1)  
+		) t(col1)
+/*
+col1
+----
+a
+b
+
+(2 row(s) affected)
+*/  
 ```
 We just define the columns names differently.
 Note that union (all) also requires you to define column names otherwise you get a "(no column name)".
