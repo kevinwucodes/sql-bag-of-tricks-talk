@@ -51,6 +51,7 @@ select @@rowcount --1
 hmm, so select gives us rows, even when they are null!
 
 ### how about no rows?
+#### first way
 ```SQL
 select	1
 from	(
@@ -59,7 +60,9 @@ from	(
 where	col1 is not null
 
 select @@rowcount --0
-
+```
+#### second way
+```SQL
 select	1
 where	1=0
 
