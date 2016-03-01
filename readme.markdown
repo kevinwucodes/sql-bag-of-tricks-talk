@@ -116,6 +116,13 @@ select		col1
 from	(	--subquery
 			select 1
 		) t(col1)
+/*
+col1
+-----------
+1
+
+(1 row(s) affected)
+*/
 ```
 where "t" is defined as the alias of the subquery
 We can define the column names of "t" during the alias creation of "t" like this:
@@ -129,6 +136,13 @@ select		col1
 from	( --subquery
 			select 1 col1		-- or as aliases in the column
 		) t
+/*
+col1
+-----------
+1
+
+(1 row(s) affected)
+*/
 ```
 #### 2 levels deep
 ```SQL
@@ -143,6 +157,13 @@ from		(	--subquery 1
 						) subq2
 
 			) subq1
+/*
+col1
+-----------
+1
+
+(1 row(s) affected)
+*/
 ```
 This is _nuts_, is there a better way?
 
@@ -159,9 +180,14 @@ s1 as (
 select	col1
 from	s1
 where	col1 >= 2
---row result:
---2
---3
+/*
+col1
+-----------
+2
+3
+
+(2 row(s) affected)
+*/
 ```
 #### two tables
 ```SQL
@@ -179,6 +205,13 @@ s1 as (
 select	col1
 from		s2
 where		col1 = 3
+/*
+col1
+-----------
+3
+
+(1 row(s) affected)
+*/
 ```
 
 ### group by
@@ -196,6 +229,16 @@ select		name
 			, count(stars) rows		
 from		s1
 group by	name
+/*
+name  rows
+----- -----------
+kevin 2
+mike  1
+sally 2
+Warning: Null value is eliminated by an aggregate or other SET operation.
+
+(3 row(s) affected)
+*/
 ```
 
 Wait, what happened to my NULLs?  Group by doesn't care about them so lets rewrite this query if *we* care about them
@@ -215,6 +258,15 @@ select		name
 			, count(isnull(stars,0)) rows	--another way
 from		s1
 group by	name
+/*
+name  rows        rows
+----- ----------- -----------
+kevin 3           3
+mike  1           1
+sally 2           2
+
+(3 row(s) affected)
+*/
 ```
 *You need to determine if it makes sense whether nulls should be counted or not*
 
@@ -239,6 +291,13 @@ from		s1
 where		name <> 'kevin'
 group by	name
 having		min(stars) >=3
+/*
+name  rows        totalStars  minimumStar minimumStarWithNull
+----- ----------- ----------- ----------- -------------------
+mike  2           11          3           3
+
+(1 row(s) affected)
+*/
 ```
 The where clause happens _before_ you group by.  The having clause happens _after_ you group by.
 
@@ -262,6 +321,17 @@ select		starsid
 			, orderDateDesc = row_number() over (partition by personid order by collectedDate desc)
 
 from		stars
+/*
+starsid     personid    stars       collectedDate           orderNothing         orderStar            orderStarDesc        orderDate            orderDateDesc
+----------- ----------- ----------- ----------------------- -------------------- -------------------- -------------------- -------------------- --------------------
+1           1           5           2016-03-01 00:00:00.000 3                    2                    2                    3                    1
+2           1           9           2015-01-01 00:00:00.000 1                    3                    1                    2                    2
+3           1           2           2012-02-05 00:00:00.000 2                    1                    3                    1                    3
+4           3           10          2014-04-01 00:00:00.000 2                    1                    2                    2                    1
+5           3           11          2013-02-22 00:00:00.000 1                    2                    1                    1                    2
+
+(5 row(s) affected)
+*/
 ```
 There are lots of windowed functions: rank, count, sum, ntile, ...  Look them up in the SQL documentation and checkout their examples
 
