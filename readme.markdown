@@ -81,10 +81,9 @@ select @@rowcount --0
 ```
 #### second way (table value constructor)
 ```SQL
-select	1
-		, col1
+select	col1
 from	(
-			values ('a'), ('a')
+			values ('a'), ('b')
 		) t(col1)  
 ```
 We just define the columns names differently.
