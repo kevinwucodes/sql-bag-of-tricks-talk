@@ -69,12 +69,10 @@ select @@rowcount --0
 ### lets make some rows
 ### expressions from values -- this enumerates expressions across your rows
 #### first way
-```SQL
-  --union
+```SQL  
   			select 1
 	union	select 1		--union removes duplicates
-
-	--union all
+	
 				select 1
 	union all	select 1	--union all keeps them
 ```
