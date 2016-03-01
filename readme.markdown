@@ -97,8 +97,6 @@ select @@rowcount --0
 ```
 
 
-
-
 ### subqueries
 ```SQL
 select		col1
@@ -194,7 +192,8 @@ s1 as (
 	union all select 'sally', 6
 )
 select		name
-			, count(1) rows		
+			, count(1) rows								--1st way
+			, count(isnull(stars,0)) rows	--another way
 from		s1
 group by	name
 
@@ -222,7 +221,97 @@ group by	name
 having		min(stars) >=3
 ```
 
+### windowed functions
+```SQL
+;with stars(starsId, personId, stars, collectedDate) as (
+			  select 1, 1, 5,  cast('2016-03-01' as datetime)
+	union all select 2, 1, 9,  cast('2015-01-01' as datetime)
+	union all select 3, 1, 2,  cast('2012-02-05' as datetime)
+	union all select 4, 3, 10, cast('2014-04-01' as datetime)
+	union all select 5, 3, 11, cast('2013-02-22' as datetime)
+)
+select		starsid
+			, personid
+			, stars
+			, collectedDate
+			, orderNothing = row_number() over (partition by personid order by (select null))
+			, orderStar = row_number() over (partition by personid order by stars)
+			, orderStarDesc = row_number() over (partition by personid order by stars desc)
+			, orderDate = row_number() over (partition by personid order by collectedDate)
+			, orderDateDesc = row_number() over (partition by personid order by collectedDate desc)
+
+from		stars
+```
+#### lots of windowed functions: rank, count, sum, ntile, ...
+
 ### joins
+#### 3 join types that you'll use on a daily basis
+##### inner join
+the resulting join will show that each record in the two joined tables is matched
+```SQL
+;with persons(personId, name) as (
+			  select 1, 'Kevin'
+	union all select 2, 'Sally'
+	union all select 3, 'Mike'
+)
+, stars(starsId, personId, stars, collectedDate) as (
+		  select 1, 1, 5,  cast('2016-03-01' as datetime)
+union all select 2, 1, 9,  cast('2015-01-01' as datetime)
+union all select 3, 3, 10, cast('2014-04-01' as datetime)
+)
+
+select		p.personid
+			, p.name
+
+			, s.starsId
+			, s.personid
+			, s.stars
+			, s.collectedDate
+
+from		persons	p
+inner join	stars	s	on	s.personid = p.personid
+-- there is no Sally here because Sally has no stars collected
+```
+
+##### left join
+the resulting join will contain all records from the "left" table, even if the join condition does not find a matching record from the "right table"
+```SQL
+;with persons(personId, name) as (
+			  select 1, 'Kevin'
+	union all select 2, 'Sally'
+	union all select 3, 'Mike'
+)
+, stars(starsId, personId, stars, collectedDate) as (
+		  select 1, 1, 5,  cast('2016-03-01' as datetime)
+union all select 2, 1, 9,  cast('2015-01-01' as datetime)
+union all select 3, 3, 10, cast('2014-04-01' as datetime)
+)
+
+select		p.personid
+			, p.name
+
+			, s.starsId
+			, s.personid
+			, s.stars
+			, s.collectedDate
+
+from		persons	p
+left join 	stars	s	on	s.personid = p.personid
+-- Sally is now shown because of left join, even though she has no stars collected
+```
+##### right join
+....
+
+##### a right join can be converted to a left join when you flip the order of the join
+so really there are 2 join types that you'll use on a daily basis
+
+
+
+
+
+
+
+
 joins on table restraints (dont put everything in the where clause)
 
 ```SQL
@@ -240,8 +329,10 @@ joins on table restraints (dont put everything in the where clause)
 
   -- the join there is lowering the row count
 
-### windowed functions
 
+
+
+### putting it all together
 before CTE and windowed functions, to get weighted rows, we did something like this
 (use travel as example)
 
@@ -249,18 +340,16 @@ before CTE and windowed functions, to get weighted rows, we did something like t
 
 ... the better way.
 
-
-### putting it all together
 CTE, windowed functions
-
-
-### fun with fibonacci
 
 
 ### SQL formatting!
 
 
+
 ### one last thing....  recursive SQL!
+
+### fun with fibonacci
 
 
 
