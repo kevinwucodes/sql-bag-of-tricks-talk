@@ -48,7 +48,7 @@ select null
 select @@rowcount --1
 --yes null is an expression too!
 ```
-#### select gives us rows, even when they are null!
+hmm, so select gives us rows, even when they are null!
 
 ### how about no rows?
 ```SQL
