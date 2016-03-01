@@ -79,7 +79,7 @@ select @@rowcount --0
 #### second way (table value constructor)
 ```SQL
 select	1
-, col1
+	, col1
 from	(
 			values ('a'), ('a')
 		) t(col1)  
