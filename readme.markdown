@@ -137,8 +137,9 @@ from		(	--subquery 1
 
 			) subq1
 ```
+this is nuts, is there a better way?
 
-### but common table expressions (CTE) are so much better
+### Common table expressions (CTE)
 #### one table
 ```SQL
 ;with
@@ -189,14 +190,12 @@ from		s1
 group by	name
 ```
 
-wait, what happened to my NULLs?
-group by doesn't care about them
-so lets rewrite
+Wait, what happened to my NULLs?  Group by doesn't care about them so lets rewrite this query if *we* care about them
 
 ```SQL
 ;with
 s1 as (
-	select 'kevin' name, 3 stars
+			select 'kevin' name, 3 stars
 	union all select 'kevin', 2
 	union all select 'kevin', null
 	union all select 'mike', 3
