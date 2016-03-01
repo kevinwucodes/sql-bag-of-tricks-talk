@@ -63,7 +63,7 @@ select @@rowcount --0
 ```
 #### second way
 ```SQL
-select	1
+select	1, null
 where	1=0
 
 select @@rowcount --0
