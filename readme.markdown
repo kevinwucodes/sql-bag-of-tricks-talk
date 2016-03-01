@@ -87,7 +87,8 @@ from	(
 		) t(col1)  
 ```
 We just define the columns names differently.
-Note that union (all) also requires you to define the column names  
+Note that union (all) also requires you to define the column names otherwise you get a "(no column name)".
+To have no column names is generally fine, especially if the query is the last resultset in the chain.  However, if you need to use a resultset to participate in another resultset downstream and there are no column names, SQL Server will give you an error.
 
 ### expressions from table
 ```SQL
