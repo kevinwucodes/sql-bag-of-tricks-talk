@@ -52,16 +52,16 @@ hmm, so select gives us rows, even when they are null!
 
 ### how about no rows?
 ```SQL
-select 1
-from (
-	select null
-) t(col1)
-where col1 is not null
+select	1
+from	(
+				select null
+			) t(col1)
+where	col1 is not null
 
 select @@rowcount --0
 
 select 1
-where 1=0
+where	1=0
 
 select @@rowcount --0
 ```
@@ -70,23 +70,25 @@ select @@rowcount --0
 ### expressions from values -- this enumerates expressions across your rows
 #### first way
 ```SQL
-  --first way, union (all)
+  --union
   			select 1
 	union	select 1		--union removes duplicates
 
+	--union all
 				select 1
 	union all	select 1	--union all keeps them
 ```
 #### second way
 ```SQL
-  --second way, table value constructor    
-  select 1, col1
-  from (
-    values ('a'), ('a')
-  ) t(col1)
-  --but we just define the columns names differently
-  --union also requires you to define the column names  
+  --table value constructor    
+  select	1
+					, col1
+  from	(
+    			values ('a'), ('a')
+  			) t(col1)  
 ```
+We just define the columns names differently.
+Note that union (all) also requires you to define the column names  
 
 ### expressions from table
 ```SQL
@@ -97,7 +99,7 @@ select @@rowcount --0
 ### that's too many, I can't count that high
 ```SQL
   --just the first 10 please
-  select top 10
+  select 	top 10
           'hello',
           'world'
   from sys.objects
@@ -108,16 +110,16 @@ select @@rowcount --0
 #### 1 level deep
 ```SQL
 select		col1
-
 from	(	--subquery
 				select 1
 			) t(col1)
--- t is the alias of the "table"
--- we can define the column names of "t" during the alias of "t" like this:
--- t(col1, col2)
+```
+t is the alias of the "table"
+We can define the column names of "t" during the alias creation of "t" like this:
+t(col1, col2)
 
+```SQL
 -- or alternatively
-
 select		col1
 
 from	( --subquery
@@ -138,7 +140,6 @@ from		(	--subquery 1
 
 				) subq1
 ```
-
 
 ### but common table expressions (CTE) are so much better
 #### one table
