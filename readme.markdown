@@ -111,11 +111,13 @@ from	(	--subquery
 -- t is the alias of the "table"
 -- we can define the column names of "t" during the alias of "t" like this:
 -- t(col1, col2)
--- or as aliases in the column
+
+-- or alternatively
+
 select		col1
 
 from	( --subquery
-				select 1 col1
+				select 1 col1		-- or as aliases in the column
 			) t
 ```
 #### 2 levels deep
@@ -135,6 +137,7 @@ from		(	--subquery 1
 
 
 ### but common table expressions (CTE) are so much better
+#### one table
 ```SQL
 ;with
 s1 as (
@@ -148,7 +151,9 @@ where	col1 >= 2
 --row result:
 --2
 --3
-
+```
+#### two tables
+```SQL
 ;with
 s1 as (
 	select 1	col1
@@ -180,11 +185,13 @@ select		name
 			, count(stars) rows		
 from		s1
 group by	name
+```
 
---wait, what happened to my NULL?
---group by doesn't care about them
---so lets rewrite
+wait, what happened to my NULL?
+group by doesn't care about them
+so lets rewrite
 
+```SQL
 ;with
 s1 as (
 	select 'kevin' name, 3 stars
@@ -199,6 +206,8 @@ select		name
 			, count(isnull(stars,0)) rows	--another way
 from		s1
 group by	name
+
+--determine if it makes sense whether nulls should be counted or not
 
 --more aggregates
 --HAVING vs WHERE
