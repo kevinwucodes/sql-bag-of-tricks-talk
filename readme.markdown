@@ -55,7 +55,7 @@ hmm, so select gives us rows, even when they are null!
 select	1
 from	(
 		select null
-      ) t(col1)
+		) t(col1)
 where	col1 is not null
 
 select @@rowcount --0
