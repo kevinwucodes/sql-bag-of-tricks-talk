@@ -1,3 +1,5 @@
+These are the notes from the SQL Bag of Tricks talk I gave to Enterprise Systems Integration at UCSB
+
 # SQL (SQL Server edition)
 
 ### comments are awesome
@@ -187,7 +189,7 @@ from		s1
 group by	name
 ```
 
-wait, what happened to my NULL?
+wait, what happened to my NULLs?
 group by doesn't care about them
 so lets rewrite
 
