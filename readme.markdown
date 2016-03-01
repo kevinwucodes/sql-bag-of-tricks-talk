@@ -31,11 +31,6 @@ select 1, 'hello', 'world', 'hello' + 'world'
 select 2-3
 ```
 
-### boolean
-```SQL
-select 1=1	--doesn't work  :(
-```
-
 ### "if"
 ```SQL
 select case when 1=1 then 'yes' else 'no' end	--returns yes
