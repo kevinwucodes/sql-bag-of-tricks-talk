@@ -71,9 +71,11 @@ select @@rowcount --0
 #### first way
 ```SQL
   --first way, union (all)
-  select 1 union select 1		--union removes duplicates
+  			select 1
+	union	select 1		--union removes duplicates
 
-  select 1 union all select 1	--union all keeps them
+  					select 1
+	union all	select 1	--union all keeps them
 ```
 #### second way
 ```SQL
