@@ -68,22 +68,21 @@ select @@rowcount --0
 
 ### lets make some rows
 ### expressions from values -- this enumerates expressions across your rows
-#### first way
+#### first way (unions)
 ```SQL  
   			select 1
 	union	select 1		--union removes duplicates
-	
+
 				select 1
 	union all	select 1	--union all keeps them
 ```
-#### second way
+#### second way (table value constructor)
 ```SQL
-  --table value constructor    
-  select	1
-					, col1
-  from	(
-    			values ('a'), ('a')
-  			) t(col1)  
+select	1
+				, col1
+from	(
+			values ('a'), ('a')
+		) t(col1)  
 ```
 We just define the columns names differently.
 Note that union (all) also requires you to define the column names  
