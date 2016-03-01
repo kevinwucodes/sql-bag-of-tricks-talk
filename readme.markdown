@@ -118,8 +118,9 @@ where "t" is defined as the alias of the subquery
 We can define the column names of "t" during the alias creation of "t" like this:
 t(col1, col2)
 
+Or like this:
+
 ```SQL
--- or alternatively
 select		col1
 
 from	( --subquery
@@ -140,9 +141,10 @@ from		(	--subquery 1
 
 			) subq1
 ```
-this is nuts, is there a better way?
+This is _nuts_, is there a better way?
 
 ### Common table expressions (CTE)
+You can think of CTEs as a temporary, in-memory resultset that exist only in the execution context of the query.  Once the query finishes execution in a CTE, the CTE is gone.  This is different from a temporary table because temporary tables (depending on type) are written to disk and therefore can be used beyond the execution context of a query.
 #### one table
 ```SQL
 ;with
@@ -235,6 +237,7 @@ where		name <> 'kevin'
 group by	name
 having		min(stars) >=3
 ```
+The where clause happens _before_ you group by.  The having clause happens _after_ you group by.
 
 ### windowed functions
 ```SQL
@@ -257,7 +260,7 @@ select		starsid
 
 from		stars
 ```
-#### lots of windowed functions: rank, count, sum, ntile, ...
+There are lots of windowed functions: rank, count, sum, ntile, ...  Look them up in the SQL documentation and checkout their examples
 
 ### joins
 #### 3 join types that you'll use on a daily basis
@@ -289,14 +292,14 @@ inner join	stars	s	on	s.personid = p.personid
 ```
 
 ##### left join
-the resulting join will contain all records from the "left" table, even if the join condition does not find a matching record from the "right table"
+the resulting join will contain all records from the "left" table, even if the join condition does not find a matching record from the "right" table
 ```SQL
 ;with persons(personId, name) as (
 			  select 1, 'Kevin'
 	union all select 2, 'Sally'
 	union all select 3, 'Mike'
 )
-, stars(starsId, personId, stars, collectedDate) as (
+,stars(starsId, personId, stars, collectedDate) as (
 		  select 1, 1, 5,  cast('2016-03-01' as datetime)
 union all select 2, 1, 9,  cast('2015-01-01' as datetime)
 union all select 3, 3, 10, cast('2014-04-01' as datetime)
@@ -315,35 +318,22 @@ left join 	stars	s	on	s.personid = p.personid
 -- Sally is now shown because of left join, even though she has no stars collected
 ```
 ##### right join
-....
+similar to left join, a right join is such that the resulting join will contain all records from the "right" table, even if the join condition does not find a matching record from the "left" table
 
-##### a right join can be converted to a left join when you flip the order of the join
-so really there are 2 join types that you'll use on a daily basis
-
+*Note that a right join can be converted to a left join when you flip the order of the join*
 
 
-
-
-
-
-
-joins on table restraints (dont put everything in the where clause)
-
+In the example above, this
 ```SQL
-
+from		stars	s
+left join	persons p on p.personid = s.personid
 ```
-
-
-
-
-
-  from    table1  t1
-
-  inner join  table2  t2 on t2.id = t1.id
-                          and t2.status = 'happy'
-
-  -- the join there is lowering the row count
-
+is the same as
+```SQL
+from		persons p
+right join	stars	s	on	s.personid = p.personid
+```
+**so really there are only 2 join types that you'll use most of the time**
 
 
 
