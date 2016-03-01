@@ -1,4 +1,4 @@
-These are the notes from the SQL Bag of Tricks talk I gave to Enterprise Systems Integration at UCSB
+These are the notes from the SQL Bag of Tricks talk I gave at UCSB
 
 # SQL (SQL Server edition)
 
@@ -60,7 +60,7 @@ where	col1 is not null
 
 select @@rowcount --0
 
-select 1
+select	1
 where	1=0
 
 select @@rowcount --0
