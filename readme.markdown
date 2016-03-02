@@ -256,7 +256,7 @@ col1
 ```SQL
 ;with
 s1 as (
-	select 1	col1
+		select 1	col1
 	union select 2
 	union select 3
 )
