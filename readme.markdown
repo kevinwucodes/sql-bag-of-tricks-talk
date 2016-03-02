@@ -70,7 +70,7 @@ hmm, so select gives us rows, even when they are null!
 ### how about no rows?
 #### first way
 ```SQL
-select	1
+select	1, null
 from	(
 			select null
 		) t(col1)
@@ -115,7 +115,7 @@ union only works when the number of columns of both tables are the same and the 
 #### second way (table value constructor)
 ```SQL
 select	1 'one'
-				, col1				
+		, col1				
 from	(
 			values
 				 ('a')
