@@ -516,11 +516,11 @@ Before we had CTEs and windowed functions, we did something like this to get wei
 --pseudocode
 from 				persons p
 inner join	stars s	ON	s.starid =	(	-- this gets the first star record per personid
-												 SELECT  TOP 1 starid
-												 FROM    stars
-												 WHERE   personid = p.personid
-												 order by collectedDate
-												)
+								 SELECT  TOP 1 starid
+								 FROM    stars
+								 WHERE   personid = p.personid
+								 order by collectedDate
+								)
 ```
 
 ...but this is a hack!
