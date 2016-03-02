@@ -31,9 +31,31 @@ select 1, 'hello', 'world', 'hello' + 'world'
 select 2-3
 ```
 
+### aliasing column names
+```SQL
+select	 'English' language
+				, 'English' as language
+				, language = 'English'
+/*
+language language language
+-------- -------- --------
+English  English  English
+
+(1 row(s) affected)
+*/
+
+```
+
 ### "if"
 ```SQL
-select case when 1=1 then 'yes' else 'no' end	--returns yes
+select case when 1=1 then 42 else '?' end meaningOfLife
+/*
+meaningOfLife
+-------------
+42
+
+(1 row(s) affected)
+*/
 ```
 
 ### huh? null?
@@ -65,16 +87,32 @@ select @@rowcount --0
 ```
 
 ### lets make some rows
-### expressions from values -- this enumerates expressions across your rows
 #### first way (unions)
 ```SQL  
   			select 1
 	union	select 1		--union removes duplicates
+/*
+(no column name)
+-----------
+1
 
+(1 row(s) affected)
+*/
 				select 1
 	union all	select 1	--union all keeps them
+/*
+(no column name)
+-----------
+1
+1
+
+(2 row(s) affected)
+*/
 ```
-#### table value constructor
+
+union only works when the number of columns of both tables are the same and the data types are compatible
+
+#### second way (table value constructor)
 ```SQL
 select	1 'one'
 				, col1				
@@ -96,7 +134,11 @@ We just define the column names differently.
 Note that union or union all both require you to define column names.  If not, you get a "(no column name)" as a placeholder for the name of the column.
 To have no column names is generally fine, especially if the query is the last resultset in the chain.  However, if you need to use a resultset that have no column names that end up participating in another resultset downstream from it, SQL Server will give you an error.
 
-### expressions from table
+### So by "making" rows, we can enumerate expressions across those rows
+
+
+
+### expressions from a "real", written-onto-the-disk table
 ```SQL
   select 'hello', 'world'
   from sys.objects
