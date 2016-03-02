@@ -660,7 +660,7 @@ Hierarchy
 Social
 * friends -> friends
 
-You'll likely use recursive SQL where you know your resultset is either tree-like or nested and you dont know the depth of the tree/nest
+You'll likely use recursive SQL where you know your resultset is either tree-like or nested but you dont know the depth of the tree/nest
 
 [Recursive Queries Using Common Table Expressions](https://technet.microsoft.com/en-us/library/ms186243(v=sql.105).aspx)
 
