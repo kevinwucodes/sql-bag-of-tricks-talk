@@ -34,8 +34,8 @@ select 2-3
 ### aliasing column names
 ```SQL
 select	 'English' language
-				, 'English' as language
-				, language = 'English'
+		, 'English' as language
+		, language = 'English'
 /*
 language language language
 -------- -------- --------
