@@ -283,10 +283,11 @@ After this CTE runs, all references to "s1" and "s2" are now gone.  To SQL Serve
 ```SQL
 ;with
 s1 as (
-			select 'kevin' name, 3 stars
+	select 'kevin' name, 3 stars
 	union all select 'kevin', 2
 	union all select 'kevin', null
 	union all select 'mike', 3
+	union all select 'mike', 8
 	union all select 'sally', 1
 	union all select 'sally', 6
 )
@@ -298,7 +299,7 @@ group by	name
 name  rows
 ----- -----------
 kevin 2
-mike  1
+mike  2
 sally 2
 Warning: Null value is eliminated by an aggregate or other SET operation.
 
@@ -311,10 +312,11 @@ Wait, what happened to my NULLs?  Group by doesn't care about them so lets rewri
 ```SQL
 ;with
 s1 as (
-			select 'kevin' name, 3 stars
+	select 'kevin' name, 3 stars
 	union all select 'kevin', 2
 	union all select 'kevin', null
 	union all select 'mike', 3
+	union all select 'mike', 8
 	union all select 'sally', 1
 	union all select 'sally', 6
 )
@@ -327,7 +329,7 @@ group by	name
 name  rows        rows
 ----- ----------- -----------
 kevin 3           3
-mike  1           1
+mike  2           2
 sally 2           2
 
 (3 row(s) affected)
