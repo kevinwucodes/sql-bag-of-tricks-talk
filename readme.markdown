@@ -283,7 +283,7 @@ After this CTE runs, all references to "s1" and "s2" are now gone.  To SQL Serve
 ```SQL
 ;with
 s1 as (
-	select 'kevin' name, 3 stars
+		select 'kevin' name, 3 stars
 	union all select 'kevin', 2
 	union all select 'kevin', null
 	union all select 'mike', 3
