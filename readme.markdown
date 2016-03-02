@@ -523,7 +523,7 @@ inner join	stars s	ON	s.starid =	(	-- this gets the first star record per person
 
 ...but this is a hack!
 
-...with CTEs and windowed functions, it looks like this:
+Instead, with CTEs and windowed functions, it looks like this:
 
 ```SQL
 ;with
