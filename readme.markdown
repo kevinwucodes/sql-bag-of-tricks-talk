@@ -535,11 +535,11 @@ persons(personId, name) as (
 	union all select 3, 'Mike'
 )
 ,stars(starsId, personId, stars, collectedDate) as (
-	select 1, 1, 5,  cast('2016-03-01' as datetime)
-union all select 2, 1, 9,  cast('2015-01-01' as datetime)
-union all select 3, 1, 2,  cast('2012-02-05' as datetime)
-union all select 4, 3, 10, cast('2014-04-01' as datetime)
-union all select 5, 3, 11, cast('2013-02-22' as datetime)
+				select 1, 1, 5,  cast('2016-03-01' as datetime)
+	union all select 2, 1, 9,  cast('2015-01-01' as datetime)
+	union all select 3, 1, 2,  cast('2012-02-05' as datetime)
+	union all select 4, 3, 10, cast('2014-04-01' as datetime)
+	union all select 5, 3, 11, cast('2013-02-22' as datetime)
 )
 ,rankedStars as (
 	select
