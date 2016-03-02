@@ -266,8 +266,8 @@ s1 as (
 	where	col1 >= 2
 )
 select	col1
-from		s2
-where		col1 = 3
+from	s2
+where	col1 = 3
 /*
 col1
 -----------
