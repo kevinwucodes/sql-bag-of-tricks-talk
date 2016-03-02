@@ -565,13 +565,6 @@ Mike  11          2013-02-22 00:00:00.000
 ```
 Yes, this might be longer, but it's easier to follow what's going on as each "table" is pipelined into the next table
 
-
-
-
-### SQL formatting!
-
-
-
 ### one last thing....  recursive SQL!
 
 #### n + n of numbers
