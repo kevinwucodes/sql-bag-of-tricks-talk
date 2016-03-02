@@ -624,7 +624,7 @@ n
 	----recursive member
 	select next, start + next
 	from	b 		--notice that the b here is defined in our CTE!  This is how SQL "loops" through recursively
-	where start < 100	--terminating condition
+	where	start < 100	--terminating condition
 )
 --show final results
 select
