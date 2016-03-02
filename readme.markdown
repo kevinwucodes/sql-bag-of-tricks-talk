@@ -414,7 +414,7 @@ the resulting join will show that each record in the two joined tables is matche
 	union all select 3, 'Mike'
 )
 ,stars(starId, personId, stars, collectedDate) as (
-			select 1, 1, 5,  cast('2016-03-01' as datetime)
+				select 1, 1, 5,  cast('2016-03-01' as datetime)
 	union all select 2, 1, 9,  cast('2015-01-01' as datetime)
 	union all select 3, 1, 2,  cast('2012-02-05' as datetime)
 	union all select 4, 3, 10, cast('2014-04-01' as datetime)
