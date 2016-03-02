@@ -43,8 +43,9 @@ English  English  English
 
 (1 row(s) affected)
 */
-
 ```
+
+If you dont define column names, you get a "(no column name)" as a placeholder for the name of the column.  To have no column names is generally fine, especially if the query is the last resultset in the chain.  However, if you need to use a resultset that have no column names that end up participating in another resultset downstream from it, SQL Server will give you an error.
 
 ### "if"
 ```SQL
@@ -72,8 +73,8 @@ hmm, so select gives us rows, even when they are null!
 ```SQL
 select	1, null
 from	(
-			select null
-		) t(col1)
+			select null col1
+		) t
 where	col1 is not null
 
 select @@rowcount --0
@@ -130,13 +131,32 @@ one         col1
 (2 row(s) affected)
 */  
 ```
-We just define the column names differently.
-Note that union or union all both require you to define column names.  If not, you get a "(no column name)" as a placeholder for the name of the column.
-To have no column names is generally fine, especially if the query is the last resultset in the chain.  However, if you need to use a resultset that have no column names that end up participating in another resultset downstream from it, SQL Server will give you an error.
+Notice that we define the column names during the alias creation of "t".  We'll talk about that later.
 
 ### So by "making" rows, we can enumerate expressions across those rows
+```SQL
+select	stars
+		, howmany = case when stars >= 10 then 'lots' else 'little' end
+from	(
+			values
+				 (1)
+				,(5)
+				,(10)
+				,(7)
+				,(11)
+		) t(stars)
+/*
+stars       howmany
+----------- -------
+1           little
+5           little
+10          lots
+7           little
+11          lots
 
-
+(5 row(s) affected)
+*/
+```
 
 ### expressions from a "real", written-onto-the-disk table
 ```SQL
@@ -152,7 +172,6 @@ To have no column names is generally fine, especially if the query is the last r
           'world'
   from sys.objects
 ```
-
 
 ### subqueries
 #### 1 level deep
@@ -173,7 +192,7 @@ where "t" is defined as the alias of the subquery
 We can define the column names of "t" during the alias creation of "t" like this:
 t(col1, col2)
 
-Or like this:
+We dont have to do it this way.  Remember that we could define the column name as an alias to the expression we want to evaluate.
 
 ```SQL
 select		col1
@@ -257,6 +276,8 @@ col1
 (1 row(s) affected)
 */
 ```
+
+After this CTE runs, all references to "s1" and "s2" are now gone.  To SQL Server, these never existed.
 
 ### group by
 ```SQL
@@ -485,14 +506,64 @@ So really, only 2 types you use **most** of the time.
 
 
 ### putting it all together
-before CTE and windowed functions, to get weighted rows, we did something like this
-(use travel as example)
+#### Question: Can we get a list of persons with their very first star count?
 
-....but this is a hack!
+Before we had CTEs and windowed functions, we did something like this to get weighted rows:
+```SQL
+...
+--pseudocode
+from 				persons p
+inner join	stars s	ON	s.starid =	(	-- this gets the first star record per personid
+												 SELECT  TOP 1 starid
+												 FROM    stars
+												 WHERE   personid = p.personid
+												 order by collectedDate
+												)
+```
 
-... the better way.
+...but this is a hack!
 
-CTE, windowed functions
+```SQL
+;with
+persons(personId, name) as (
+			  select 1, 'Kevin'
+	union all select 2, 'Sally'
+	union all select 3, 'Mike'
+)
+,stars(starsId, personId, stars, collectedDate) as (
+	select 1, 1, 5,  cast('2016-03-01' as datetime)
+union all select 2, 1, 9,  cast('2015-01-01' as datetime)
+union all select 3, 1, 2,  cast('2012-02-05' as datetime)
+union all select 4, 3, 10, cast('2014-04-01' as datetime)
+union all select 5, 3, 11, cast('2013-02-22' as datetime)
+)
+,rankedStars as (
+	select
+				starsId, personid, stars, collectedDate
+				, ranked = row_number() over (partition by personid order by collectedDate)
+
+	from		stars  s
+)
+select		p.name
+			,rs.stars
+			,rs.collectedDate
+
+from		persons		p
+
+inner join	rankedStars	rs	on	rs.personid = p.personid
+							and	rs.ranked = 1
+/*
+name  stars       collectedDate
+----- ----------- -----------------------
+Kevin 2           2012-02-05 00:00:00.000
+Mike  11          2013-02-22 00:00:00.000
+
+(2 row(s) affected)
+*/
+```
+Yes, this might be longer, but it's easier to follow what's going on as each "table" is pipelined into the second table
+
+
 
 
 ### SQL formatting!
@@ -501,8 +572,101 @@ CTE, windowed functions
 
 ### one last thing....  recursive SQL!
 
-### fun with fibonacci
+#### n + n of numbers
+```SQL
+;with tableN as (
+	select 1 n
+)
+,b as (
+	--anchor member (where you define a starting point)
+	select	n
+	from	tableN
 
+	union all		--creating the "next" "rows" of data
 
+	--recursive member
+	select n + n
+	from b --notice that the b here is defined in our CTE!  This is how SQL "loops" through recursively
+	where	n + n < 1000	--terminating condition
+)
+--show final results
+select	n
+from	b
+/*
+n
+-----------
+1
+2
+4
+8
+16
+32
+64
+128
+256
+512
 
-### done!
+(10 row(s) affected)
+*/
+```
+
+#### fibonacci
+```SQL
+;with tableN as (
+	select  start = 1
+			,next = 1
+)
+,b as (
+	--anchor member (where you define a starting point)
+	select	start
+			, next
+	from	tableN
+
+	union all		--creating the "next" "rows" of data
+
+	----recursive member
+	select next, start + next
+	from b 		--notice that the b here is defined in our CTE!  This is how SQL "loops" through recursively
+	where start < 100	--terminating condition
+)
+--show final results
+select
+		n = row_number() over (partition by (select null) order by (select null))
+		,start 'fibonacci(n)'
+from b
+/*
+n                    fibonacci(n)
+-------------------- ------------
+1                    1
+2                    1
+3                    2
+4                    3
+5                    5
+6                    8
+7                    13
+8                    21
+9                    34
+10                   55
+11                   89
+12                   144
+
+(12 row(s) affected)
+*/
+```
+
+### What's the point?  Why recursion?
+What's the real world problem you're trying to solve?
+
+Hierarchy
+* employee -> manager
+* genealogy charts
+* geographic region -> geographic region
+
+Social
+* friends -> friends
+
+You'll likely use recursive SQL where you know your resultset is either tree-like or nested and you dont know the depth of the tree/nest
+
+[Recursive Queries Using Common Table Expressions](https://technet.microsoft.com/en-us/library/ms186243(v=sql.105).aspx)
+
+### Done!  Questions?
