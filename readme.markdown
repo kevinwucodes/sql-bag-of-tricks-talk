@@ -312,7 +312,7 @@ Wait, what happened to my NULLs?  Group by doesn't care about them so lets rewri
 ```SQL
 ;with
 s1 as (
-	select 'kevin' name, 3 stars
+			select 'kevin' name, 3 stars
 	union all select 'kevin', 2
 	union all select 'kevin', null
 	union all select 'mike', 3
@@ -341,7 +341,7 @@ sally 2           2
 ```SQL
 ;with
 s1 as (
-	select 'kevin' name, 3 stars
+			select 'kevin' name, 3 stars
 	union all select 'kevin', 2
 	union all select 'kevin', null
 	union all select 'mike', 3
