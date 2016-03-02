@@ -514,7 +514,7 @@ Before we had CTEs and windowed functions, we did something like this to get wei
 ```SQL
 ...
 --pseudocode
-from 			persons p
+from 		persons p
 inner join	stars s	ON	s.starid =	(	-- this gets the first star record per personid
 									 SELECT  TOP 1 starid
 									 FROM    stars
