@@ -579,7 +579,7 @@ Yes, this might be longer, but it's easier to follow what's going on as each "ta
 	select	n
 	from	tableN
 
-	union all		--creating the "next" "rows" of data
+	union all		--creating (by pulling) the "next" "rows" of data
 
 	--recursive member
 	select	n + n
@@ -619,7 +619,7 @@ n
 			, next
 	from	tableN
 
-	union all		--creating the "next" "rows" of data
+	union all		--creating (by pulling) the "next" "rows" of data
 
 	----recursive member
 	select next, start + next
