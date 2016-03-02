@@ -583,7 +583,7 @@ Yes, this might be longer, but it's easier to follow what's going on as each "ta
 
 	--recursive member
 	select	n + n
-	from	b 	--notice that the b here is defined in our CTE!  This is how SQL "loops" through recursively
+	from	b 			--notice that the b here is defined in our CTE!  This is how SQL "loops" through recursively
 	where	n + n < 1000	--terminating condition
 )
 --show final results
