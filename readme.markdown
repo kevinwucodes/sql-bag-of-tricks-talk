@@ -236,7 +236,7 @@ You can think of CTEs as a temporary, in-memory resultset that exist only in the
 ```SQL
 ;with
 s1 as (
-			select 1	col1
+		select 1	col1
 	union select 2
 	union select 3
 )
