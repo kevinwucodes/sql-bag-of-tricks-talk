@@ -622,7 +622,7 @@ n
 	union all		--creating (by pulling) the "next" "rows" of data
 
 	----recursive member
-	select next, start + next
+	select	next, start + next
 	from	b 		--notice that the b here is defined in our CTE!  This is how SQL "loops" through recursively
 	where	start < 100	--terminating condition
 )
